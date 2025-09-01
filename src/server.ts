@@ -1,6 +1,6 @@
 // Importera och konfigurera Express
 import express, { } from 'express'
-import type { Express } from 'express'
+import type { Express, Request } from 'express'
 
 const app: Express = express()
 const port = 1337
@@ -48,7 +48,10 @@ app.get('/cars', (req, res) => {
 })
 
 // Endpoint POST /cars/:model
-app.post('/cars/:model', (req, res) => {
+type CarParam = {
+	model: string;
+}
+app.post('/cars/:model', (req: Request<CarParam>, res) => {
 	console.log('POST /cars/:model')
 	const model: string = req.params.model
 	cars.push(model)
