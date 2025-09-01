@@ -1,9 +1,14 @@
 // Importera och konfigurera Express
 import express, { } from 'express'
-import type { Express, Request } from 'express'
+import type { Express, Request, Response } from 'express'
 
 const app: Express = express()
 const port = 1337
+
+
+// Middleware - funktioner som utökar funktionaliteten för Express
+app.use(express.json()) // for parsing application/json
+
 
 
 // Resurser / endpoints
@@ -17,16 +22,44 @@ app.get('/', (req, res) => {
 	res.send('No data :(')
 })
 
-// Resurs: "/fruits"
-app.get('/fruits', (req, res) => {
+// Resursen "/fruits"
+// Resursens data:
+interface Fruit {
+	id: number;
+	name: string;
+	price: number;
+}
+let fruits: Fruit[] = [
+	{ id: 1, name: 'banan', price: 10 },
+	{ id: 2, name: 'päron', price: 7 }
+]
+
+// Endpoint: GET /fruits
+app.get('/fruits', (req, res: Response<Fruit[]>) => {
 	console.log('Inkommande request frågar efter /fruits. Vi skickar tillbaka en lista.')
 
-	const data = [
-		{ id: 1, name: 'banan', price: 10 },
-		{ id: 2, name: 'päron', price: 7 }
-	]
-	res.send(data)
+	res.send(fruits)
 })
+
+// Endpoint: POST /fruits  (data i body)
+app.post('/fruits', (req: Request<{}, void, Fruit>, res) => {
+	const newFruit: Fruit = req.body
+	// TODO: använd Zod för att validera body. Lita inte blint på req.body utan prova allt!! Om newFruit inte är ett korrekt frukt-objekt, skicka statuskod 400 Bad Request.
+	fruits.push(newFruit)
+	res.sendStatus(201)
+})
+
+/* Exempel: användaren fyller i en ny frukt i ett frontend-formulär (kiwi) och skickar det till API:et
+fetch('/fruits', {
+	method: 'POST',
+	body: { id: 55, name: 'kiwi', price: 500 }
+})
+*/
+
+
+
+
+
 
 // Endpoint: "/counter"
 app.get('/counter', (req, res) => {
