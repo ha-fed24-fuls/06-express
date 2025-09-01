@@ -37,6 +37,26 @@ app.get('/counter', (req, res) => {
 let counter = 0
 
 
+// Resursen "/cars"
+// Resursens data:
+let cars: string[] = []
+
+// Endpoint GET /cars
+app.get('/cars', (req, res) => {
+	console.log('GET /cars')
+	res.send(cars)
+})
+
+// Endpoint POST /cars/:model
+app.post('/cars/:model', (req, res) => {
+	console.log('POST /cars/:model')
+	const model: string = req.params.model
+	cars.push(model)
+	res.sendStatus(201)  // 201 Created
+})
+
+
+
 
 // Start servern
 app.listen(port, () => {
