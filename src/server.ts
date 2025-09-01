@@ -28,6 +28,15 @@ app.get('/fruits', (req, res) => {
 	res.send(data)
 })
 
+// Endpoint: "/counter"
+app.get('/counter', (req, res) => {
+	counter++
+	res.send(`Jag har tagit emot ${counter} request.`)
+})
+// Data för endpoint
+let counter = 0
+
+
 
 // Start servern
 app.listen(port, () => {
